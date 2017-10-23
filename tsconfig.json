@@ -4,8 +4,10 @@
     "strict": true,
     "noEmit": true
   },
+  "files": [
+    "index.d.ts"
+  ],
   "include": [
-    "index.d.ts",
-    "test/**/*.ts"
+    "index.d.ts"
   ]
 }
