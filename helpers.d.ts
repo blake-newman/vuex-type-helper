@@ -1,5 +1,4 @@
-import Vue = require('vue')
-import 'vuex'
+import Vue from 'vue'
 
 declare module 'vuex/types/helpers' {
   type Accessor<T, State, Getters> = {

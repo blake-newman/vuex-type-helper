@@ -30,21 +30,21 @@ interface Commit<P> {
   <P extends BasePayload>(payloadWithType: P, options: RootOption): void
 }
 
-interface ActionContext<State, Getters, Actions, Mutations> extends BaseActionContext<State, any> {
+interface ActionContext<State, RootState, Getters, Actions, Mutations> extends BaseActionContext<State, RootState> {
   getters: Getters
   dispatch: Dispatch<Actions>
   commit: Commit<Mutations>
 }
 
-export type DefineGetters<Getters, State, ExtraGetters = {}> = {
-  [K in keyof Getters]: (state: State, getters: Getters & ExtraGetters, rootState: any, rootGetters: any) => Getters[K]
+export type GetterTree<State, Getters, RootState, RootGetters = {}> = {
+  [K in keyof Getters]: (state: State, getters: Getters, rootState: RootState, rootGetters: RootGetters) => Getters[K]
 }
 
-export type DefineActions<Actions, State, Mutations, Getters = {}, ExtraActions = {}> = {
-  [K in keyof Actions]: (ctx: ActionContext<State, Getters, Actions & ExtraActions, Mutations>, payload: Actions[K]) => void | Promise<any>
+export type ActionTree<Actions, State, RootState, Mutations, Getters = {}, ExtraActions = {}> = {
+  [K in keyof Actions]: (ctx: ActionContext<State, RootState, Getters, Actions & ExtraActions, Mutations>, payload: Actions[K]) => void | Promise<any>
 }
 
-export type DefineMutations<Mutations, State> = {
+export type MutationTree<Mutations, State> = {
   [K in keyof Mutations]: (state: State, payload: Mutations[K]) => void
 }
 
@@ -55,3 +55,7 @@ type Mapper<P> = {
 export type Dispatcher<Actions, M extends Mapper<Actions> = Mapper<Actions>, K extends keyof M = keyof M> = M[K]
 
 export type Committer<Mutations, M extends Mapper<Mutations> = Mapper<Mutations>, K extends keyof M = keyof M> = M[K]
+
+export interface SourceOrTarget<T> {
+  [index: string]: T
+}
