@@ -59,6 +59,8 @@ export type Committer<Mutations, M extends Mapper<Mutations> = Mapper<Mutations>
 
 export interface Module<S, R> extends BaseModule<S, R> {}
 
+type Dictionary<T> = { [key: string]: T };
+
 type Accessor<T, State, Getters> = {
   [K in keyof T]: <V extends Vue>(this: V, state: State, getters: Getters) => T[K]
 } & {
@@ -66,7 +68,7 @@ type Accessor<T, State, Getters> = {
 }
 
 interface ComputedMapper<T> {
-  <Key extends keyof T, Map extends Partial<Key>>(map: Map): { [K in keyof Map]: () => T[Map[K]] }
+  <Key extends keyof T, Map extends Dictionary<Key>>(map: Map): { [K in keyof Map]: () => T[Map[K]] }
   <Key extends keyof T>(map: Key[]): { [K in Key]: () => T[K] }
 }
 
@@ -75,7 +77,8 @@ interface ComputedStateMapper<State, Getters> {
 }
 
 interface MethodsMapper<T, R> {
-  <Key extends keyof T, Map extends Partial<Key>>(map: Map): { [K in keyof Map]: (payload: T[Map[K]]) => R }
+  <Key extends keyof T, Map extends Dictionary<Key>>(map: Map): { [K in keyof Map]: (payload?: T[Map[K]]) => R }
+  <Key extends keyof T, Map extends Dictionary<Key>>(map: Map): { [K in keyof Map]: (payload: T[Map[K]]) => R }
   <Key extends keyof T>(map: Key[]): { [K in Key]: (payload: T[K]) => R }
 }
 
