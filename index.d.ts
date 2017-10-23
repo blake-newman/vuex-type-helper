@@ -1,5 +1,6 @@
 import {
-  ActionContext as BaseActionContext
+  ActionContext as BaseActionContext,
+  Module as BaseModule
 } from 'vuex'
 
 import './helpers'
@@ -36,12 +37,12 @@ interface ActionContext<State, RootState, Getters, Actions, Mutations> extends B
   commit: Commit<Mutations>
 }
 
-export type GetterTree<State, Getters, RootState, RootGetters = {}> = {
-  [K in keyof Getters]: (state: State, getters: Getters, rootState: RootState, rootGetters: RootGetters) => Getters[K]
+export type GetterTree<State, Getters, RootState> = {
+  [K in keyof Getters]: (state: State, getters: Getters, rootState: RootState, rootGetters: any) => Getters[K]
 }
 
-export type ActionTree<Actions, State, RootState, Mutations, Getters = {}, ExtraActions = {}> = {
-  [K in keyof Actions]: (ctx: ActionContext<State, RootState, Getters, Actions & ExtraActions, Mutations>, payload: Actions[K]) => void | Promise<any>
+export type ActionTree<Actions, State, RootState, Mutations, Getters = {}> = {
+  [K in keyof Actions]: (ctx: ActionContext<State, RootState, Getters, Actions, Mutations>, payload: Actions[K]) => void | Promise<any>
 }
 
 export type MutationTree<Mutations, State> = {
@@ -56,6 +57,4 @@ export type Dispatcher<Actions, M extends Mapper<Actions> = Mapper<Actions>, K e
 
 export type Committer<Mutations, M extends Mapper<Mutations> = Mapper<Mutations>, K extends keyof M = keyof M> = M[K]
 
-export interface SourceOrTarget<T> {
-  [index: string]: T
-}
+export interface Module<S, R> extends BaseModule<S, R> {}
