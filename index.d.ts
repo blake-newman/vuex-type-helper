@@ -78,8 +78,7 @@ interface ComputedStateMapper<State, Getters> {
 
 interface MethodsMapper<T, R> {
   <Key extends keyof T, Map extends Dictionary<Key>>(map: Map): { [K in keyof Map]: (payload?: T[Map[K]]) => R }
-  <Key extends keyof T, Map extends Dictionary<Key>>(map: Map): { [K in keyof Map]: (payload: T[Map[K]]) => R }
-  <Key extends keyof T>(map: Key[]): { [K in Key]: (payload: T[K]) => R }
+  <Key extends keyof T>(map: Key[]): { [K in Key]: (payload?: T[K]) => R }
 }
 
 interface StrictNamespacedMappers<State, Getters, Mutations, Actions> {
