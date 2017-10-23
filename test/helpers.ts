@@ -1,4 +1,4 @@
-import { createNamespacedHelpers } from 'vuex'
+import { createNamespacedHelpers } from '../index'
 import { CounterState, CounterGetters, CounterMutations, CounterActions } from './counter'
 
 const {

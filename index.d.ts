@@ -1,10 +1,7 @@
-import './helpers'
+import Vue from 'vue'
 import {
   ActionContext as BaseActionContext,
-  Module as BaseModule,
-  ComputedMapper,
-  ComputedStateMapper,
-  MethodsMapper,
+  Module as BaseModule
 } from 'vuex'
 
 
@@ -61,6 +58,26 @@ export type Dispatcher<Actions, M extends Mapper<Actions> = Mapper<Actions>, K e
 export type Committer<Mutations, M extends Mapper<Mutations> = Mapper<Mutations>, K extends keyof M = keyof M> = M[K]
 
 export interface Module<S, R> extends BaseModule<S, R> {}
+
+type Accessor<T, State, Getters> = {
+  [K in keyof T]: <V extends Vue>(this: V, state: State, getters: Getters) => T[K]
+} & {
+  [key: string]: <V extends Vue>(this: V, state: State, getters: Getters) => any
+}
+
+interface ComputedMapper<T> {
+  <Key extends keyof T, Map extends Partial<Key>>(map: Map): { [K in keyof Map]: () => T[Map[K]] }
+  <Key extends keyof T>(map: Key[]): { [K in Key]: () => T[K] }
+}
+
+interface ComputedStateMapper<State, Getters> {
+  <T>(map: Accessor<T, State, Getters>): { [K in keyof T]: () => T[K] }
+}
+
+interface MethodsMapper<T, R> {
+  <Key extends keyof T, Map extends Partial<Key>>(map: Map): { [K in keyof Map]: (payload: T[Map[K]]) => R }
+  <Key extends keyof T>(map: Key[]): { [K in Key]: (payload: T[K]) => R }
+}
 
 interface StrictNamespacedMappers<State, Getters, Mutations, Actions> {
   mapState: ComputedMapper<State> & ComputedStateMapper<State, Getters>
