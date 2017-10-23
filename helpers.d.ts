@@ -20,14 +20,4 @@ declare module 'vuex/types/helpers' {
     <Key extends keyof T, Map extends Dictionary<Key>>(map: Map): { [K in keyof Map]: (payload: T[Map[K]]) => R }
     <Key extends keyof T>(map: Key[]): { [K in Key]: (payload: T[K]) => R }
   }
-
-  interface StrictNamespacedMappers<State, Getters, Mutations, Actions> {
-    mapState: ComputedMapper<State> & ComputedStateMapper<State, Getters>
-    mapGetters: ComputedMapper<Getters>
-    mapMutations: MethodsMapper<Mutations, void>
-    mapActions: MethodsMapper<Actions, Promise<any>>
-  }
-
-  export function createNamespacedHelpers(namespace: string): NamespacedMappers
-  export function createNamespacedHelpers<State, Getters, Mutations, Actions>(namespace: string): StrictNamespacedMappers<State, Getters, Mutations, Actions>
 }

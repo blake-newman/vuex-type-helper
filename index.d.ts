@@ -1,9 +1,12 @@
+import './helpers'
 import {
   ActionContext as BaseActionContext,
-  Module as BaseModule
+  Module as BaseModule,
+  ComputedMapper,
+  ComputedStateMapper,
+  MethodsMapper,
 } from 'vuex'
 
-import './helpers'
 
 interface BasePayload {
   type: string
@@ -58,3 +61,12 @@ export type Dispatcher<Actions, M extends Mapper<Actions> = Mapper<Actions>, K e
 export type Committer<Mutations, M extends Mapper<Mutations> = Mapper<Mutations>, K extends keyof M = keyof M> = M[K]
 
 export interface Module<S, R> extends BaseModule<S, R> {}
+
+interface StrictNamespacedMappers<State, Getters, Mutations, Actions> {
+  mapState: ComputedMapper<State> & ComputedStateMapper<State, Getters>
+  mapGetters: ComputedMapper<Getters>
+  mapMutations: MethodsMapper<Mutations, void>
+  mapActions: MethodsMapper<Actions, Promise<any>>
+}
+
+export function createNamespacedHelpers<State, Getters, Mutations, Actions>(namespace: string): StrictNamespacedMappers<State, Getters, Mutations, Actions>
